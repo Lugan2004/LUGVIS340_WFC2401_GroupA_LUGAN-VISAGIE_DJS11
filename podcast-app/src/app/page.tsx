@@ -1,8 +1,8 @@
-import Navbar from "../components/Navbar";
+import SignIn from "@/components/sign-in";
 export default function Home() {
   return (
     
-      <Navbar/>
+      <SignIn/>
     
    );
 }

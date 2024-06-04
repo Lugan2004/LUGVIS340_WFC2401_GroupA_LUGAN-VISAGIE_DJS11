@@ -13,6 +13,8 @@
       --popover: 0 0% 100%;
       --popover-foreground: 222.2 84% 4.9%;
 
+      --primary-gradient: linear-gradient(to right, #47D6E9, #1A6DFF);
+
       --primary: 222.2 47.4% 11.2%;
       --primary-foreground: 210 40% 98%;
 
@@ -73,4 +75,11 @@
     body {
       @apply bg-background text-foreground;
     }
+  }
+  .gradient {
+    @apply bg-gradient-to-r from-[#47D6E9] to-[#1A6DFF];
+  }
+  .border-gradient-to-r {
+    border-image-source: linear-gradient(to right, #1A6DFF, #C822FF);
+    border-image-slice: 1;
   }
