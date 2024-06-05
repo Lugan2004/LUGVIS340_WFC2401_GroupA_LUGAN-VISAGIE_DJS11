@@ -7,7 +7,7 @@ export default function Favourites() {
   return (
     <div>
       <Navbar />
-      {/* Your JSX code goes here */}
+      <h1>Favourites</h1>
     </div>
   );
 }
