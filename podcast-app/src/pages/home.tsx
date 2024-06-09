@@ -1,12 +1,16 @@
 import Navbar from "../components/Navbar";
 import "../app/globals.css";
+import CarouselComponent from "@/components/carousel";
 
 export default function Dashboard() {
   return (
-    <div>
+    <div className="bg-zinc-700 font-sans-serif">
+      <div>
       <Navbar/>
-      <div className="text-red-500 font-bold">
-         Home
+      </div>
+      
+      <div>
+        <CarouselComponent/>
       </div>
       
     </div>
