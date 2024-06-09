@@ -1,6 +1,7 @@
 import Navbar from "../components/Navbar";
 import "../app/globals.css";
 import CarouselComponent from "@/components/carousel";
+import Filter from "@/components/filter";
 
 export default function Dashboard() {
   return (
@@ -11,6 +12,10 @@ export default function Dashboard() {
       
       <div>
         <CarouselComponent/>
+      </div>
+
+      <div>
+        <Filter/>
       </div>
       
     </div>

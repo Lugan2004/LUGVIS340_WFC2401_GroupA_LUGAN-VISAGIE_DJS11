@@ -68,7 +68,7 @@ const CarouselComponent: React.FC = () => {
               <p className="text-lg mb-6 font-sans leading-6">
                 {truncateDescription(item.description)}
               </p>
-              <button className="bg-white text-black py-3 px-6 rounded-md mb-4 font-semibold">
+              <button className="bg-zinc-700 text-white py-3 px-6 rounded-md mb-4 font-semibold border-2 border-gradient-to-r">
                 Listen Now
               </button>
             </div>

@@ -2,6 +2,16 @@
 import Link from 'next/link';
 import { useState, useEffect, SetStateAction } from 'react';
 
+interface PodcastData {
+    id: string;
+    title: string;
+    description: string;
+    image: string;
+    seasons: number;
+    genres: string[];
+    updated: string;
+  }
+
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
@@ -89,8 +99,8 @@ export default function Navbar() {
                     <h2 className="text-white font-semibold mb-2">Search Results:</h2>
                     <ul>
                         {searchResults.map((result) => (
-                            <li key={result.id} className="text-white">
-                                {result.title}
+                            <li key={result} className="text-white">
+                                {result}
                             </li>
                         ))}
                     </ul>
