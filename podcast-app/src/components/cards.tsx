@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SortingBar from './SortingBar';
-
+import ListenNowButton from './ListenNowBtn';
 interface Podcast {
   id: string;
   title: string;
@@ -75,9 +75,7 @@ const PodcastCards: React.FC = () => {
                   day: 'numeric',
                 })}
               </p>
-              <button className="bg-zinc-700 text-white py-3 px-6 rounded-md mb-4 font-semibold border-2 border-gradient-to-r">
-                Listen Now
-              </button>
+              <ListenNowButton/>
             </div>
           </div>
         ))}
@@ -87,3 +85,4 @@ const PodcastCards: React.FC = () => {
 };
 
 export default PodcastCards;
+ 

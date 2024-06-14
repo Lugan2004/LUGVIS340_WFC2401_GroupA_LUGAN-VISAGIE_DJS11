@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect } from 'react';
+import ListenNowButton from './ListenNowBtn';
 
 interface PodcastData {
   id: string;
@@ -68,9 +69,7 @@ const CarouselComponent: React.FC = () => {
               <p className="text-lg mb-6 font-sans leading-6">
                 {truncateDescription(item.description)}
               </p>
-              <button className="bg-zinc-700 text-white py-3 px-6 rounded-md mb-4 font-semibold border-2 border-gradient-to-r">
-                Listen Now
-              </button>
+              <ListenNowButton />
             </div>
           </div>
         ))}
