@@ -54,7 +54,7 @@ const PodcastCards: React.FC = () => {
         onSort={(sortedPodcasts) => setFilteredPodcasts(sortedPodcasts)}
         onFilter={(filteredPodcasts) => setFilteredPodcasts(filteredPodcasts)}
       />
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 my-6">
         {filteredPodcasts.map((podcast) => (
           <div
             key={podcast.id}
