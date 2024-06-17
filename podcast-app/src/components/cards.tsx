@@ -60,7 +60,7 @@ const PodcastCards: React.FC = () => {
             key={podcast.id}
             className="bg-zinc-900 text-white rounded-lg shadow-md overflow-hidden"
           >
-              <img src={podcast.image} alt={podcast.title} className="w-full h-48 object-cover" />
+            <img src={podcast.image} alt={podcast.title} className="w-full h-48 object-cover" />
             <div className="p-4">
               <h2 className="text-xl font-semibold mb-2">{podcast.title}</h2>
               <p className="text-white mb-1">Seasons: {podcast.seasons}</p>
@@ -75,7 +75,7 @@ const PodcastCards: React.FC = () => {
                   day: 'numeric',
                 })}
               </p>
-              <ListenNowButton/>
+              <ListenNowButton podcastId={podcast.id} />
             </div>
           </div>
         ))}
@@ -83,6 +83,7 @@ const PodcastCards: React.FC = () => {
     </div>
   );
 };
+
 
 export default PodcastCards;
  

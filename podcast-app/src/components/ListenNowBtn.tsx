@@ -1,7 +1,12 @@
+import React from 'react';
 import Link from 'next/link';
 
-const ListenNowButton: React.FC = () => {
-  const href = '../podcast';
+interface ListenNowButtonProps {
+  podcastId: string;
+}
+
+const ListenNowButton: React.FC<ListenNowButtonProps> = ({ podcastId }) => {
+  const href = `/podcast/${podcastId}`;
 
   return (
     <Link href={href} legacyBehavior>

@@ -69,7 +69,7 @@ const CarouselComponent: React.FC = () => {
               <p className="text-lg mb-6 font-sans leading-6">
                 {truncateDescription(item.description)}
               </p>
-              <ListenNowButton />
+              {/* <ListenNowButton podcastId={PodcastData.id} /> */}
             </div>
           </div>
         ))}
