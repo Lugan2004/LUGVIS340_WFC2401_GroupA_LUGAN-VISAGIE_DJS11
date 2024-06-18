@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import FavouritesBtn from './favouritesBtn';
+import { addToFavorites, removeFromFavorites, getFavorites, isFavorite } from "@/utils/localstorage";
 
 interface Episode {
+  id: string;
   title: string;
   description: string;
   episode: number;
@@ -23,6 +25,36 @@ interface PodcastData {
   seasons: Season[];
 }
 
+const AudioPlayer: React.FC<{ episodeFile: string; onClose: () => void }> = ({ episodeFile, onClose }) => (
+    <div className="fixed bottom-0 left-0 right-0 bg-zinc-900 p-4 flex items-center justify-between shadow-md">
+    <audio controls autoPlay className="w-full">
+      <source src={episodeFile} type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
+    <button
+      onClick={onClose}
+      className="text-white ml-4 hover:text-gray-300 focus:outline-none"
+      aria-label="Close audio player"
+    >
+      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+);
+
+const PlayButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
+    <button
+    onClick={onClick}
+    className="bg-gradient-to-r from-[#1A6DFF] to-[#C822FF] text-white px-4 py-2 rounded-lg shadow-md flex items-center justify-center"
+  >
+    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3l14 9-14 9V3z" />
+    </svg>
+    <span className="ml-2">Play Episode</span>
+  </button>
+);
+
 const PodcastDetails: React.FC = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -30,7 +62,9 @@ const PodcastDetails: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedSeason, setSelectedSeason] = useState<Season | null>(null);
-  const [audioPlaying, setAudioPlaying] = useState(false); // State to track if audio is playing
+  const [selectedEpisode, setSelectedEpisode] = useState<Episode | null>(null);
+  const [audioPlayerVisible, setAudioPlayerVisible] = useState(false);
+
 
   useEffect(() => {
     const fetchPodcastData = async () => {
@@ -58,38 +92,30 @@ const PodcastDetails: React.FC = () => {
     fetchPodcastData();
   }, [id]);
 
-  // Attach event listener when component mounts
-  useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (audioPlaying) {
-        const confirmationMessage = 'Audio is currently playing. Are you sure you want to leave?';
-        event.preventDefault(); // Cancel the event as stated by the standard
-        event.returnValue = confirmationMessage; // Standard for most browsers
-        return confirmationMessage; // Needed for Chrome
-      }
-    };
+  const handleAddToFavorites = (episode: Episode) => {
+    addToFavorites(episode);
+  };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, [audioPlaying]);
+  const handleRemoveFromFavorites = (episodeId: string) => {
+    removeFromFavorites(episodeId);
+  };
 
   const handleSeasonClick = (season: Season) => {
     setSelectedSeason(season);
   };
 
-  const handleAudioPlay = () => {
-    setAudioPlaying(true);
+  const handleEpisodePlay = (episode: Episode) => {
+    setSelectedEpisode(episode);
+    setAudioPlayerVisible(true);
   };
 
-  const handleAudioPause = () => {
-    setAudioPlaying(false);
+  const handleCloseAudioPlayer = () => {
+    setAudioPlayerVisible(false);
+    setSelectedEpisode(null);
   };
 
   if (isLoading) {
-    return <div className='text-white'>Loading...</div>;
+    return <div className="text-white">Loading...</div>;
   }
 
   if (error) {
@@ -97,15 +123,11 @@ const PodcastDetails: React.FC = () => {
   }
 
   if (!podcastData) {
-    return (
-      <div className='text-white'>
-        No podcast data available. Please check your internet connection.
-      </div>
-    );
+    return <div className="text-white">No podcast data available. Please check your internet connection.</div>;
   }
 
   return (
-    <div className="min-h-screen bg-zinc-900 text-zinc-100">
+     <div className="min-h-screen bg-zinc-900 text-zinc-100">
       <div className="flex flex-col md:flex-row">
         <aside className="w-full md:w-1/4 bg-zinc-800 p-4">
           <h2 className="text-xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[#1A6DFF] to-[#C822FF]">
@@ -142,35 +164,36 @@ const PodcastDetails: React.FC = () => {
             </div>
           </div>
 
-          {selectedSeason && (
-            <div>
+
+      {selectedSeason && (
+        <div>
               <h2 className="text-3xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-[#1A6DFF] to-[#C822FF]">
                 {selectedSeason.title} ({selectedSeason.episodes.length} episodes)
               </h2>
               <div className="grid gap-6">
-                {selectedSeason.episodes.map((episode, index) => (
-                  <div
-                    key={`${selectedSeason.season}-${index}`}
-                    className="bg-zinc-800 p-6 rounded-lg shadow-md"
-                  >
-                    <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-2xl font-bold">{episode.title}</h3>
-                      <FavouritesBtn />
-                    </div>
-                    <p className="text-zinc-400 mb-4">{episode.description}</p>
-                    <audio
-                      controls
-                      className="w-full"
-                      onPlay={handleAudioPlay}
-                      onPause={handleAudioPause}
-                    >
-                      <source src={episode.file} type="audio/mpeg" />
-                      Your browser does not support the audio element.
-                    </audio>
+            {selectedSeason.episodes.map((episode, index) => (
+              <div key={`${selectedSeason.season}-${index}`} className="bg-zinc-800 p-6 rounded-lg shadow-md">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-2xl font-bold">{episode.title}</h3>
+                  <div className="flex items-center">
+                    <PlayButton onClick={() => handleEpisodePlay(episode)} />
+                    <FavouritesBtn
+                      episode={episode}
+                      isFavorite={isFavorite(episode.id)}
+                      onAddToFavorites={handleAddToFavorites}
+                      onRemoveFromFavorites={handleRemoveFromFavorites}
+                    />
                   </div>
-                ))}
+                </div>
+                <p className="text-zinc-400 mb-4">{episode.description}</p>
               </div>
-            </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+          {audioPlayerVisible && selectedEpisode && (
+            <AudioPlayer episodeFile={selectedEpisode.file} onClose={handleCloseAudioPlayer} />
           )}
         </main>
       </div>
