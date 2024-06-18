@@ -8,7 +8,7 @@ export default function Favourites() {
   return (
     <div>
       <Navbar />
-      <FavoritesBody/>
+      <FavoritesBody />
     </div>
   );
 }

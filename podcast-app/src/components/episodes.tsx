@@ -62,15 +62,16 @@ const PodcastDetails: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className='text-white'>Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className='text-white'>Error: {error}</div>;
   }
 
   if (!podcastData) {
-    return <div>No podcast data available</div>;
+    return <div className='text-white'>No podcast data available.<s className='text-red-500'>Please check your internet conection</s>
+    </div>;
   }
 
     return (
