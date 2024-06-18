@@ -1,4 +1,3 @@
-// FavouritesBody.tsx
 import React, { useEffect, useState } from 'react';
 import { getFavorites, removeFromFavorites } from '@/utils/localstorage';
 

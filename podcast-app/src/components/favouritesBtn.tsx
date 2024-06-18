@@ -1,24 +1,23 @@
-// FavouritesBtn.tsx
 import React from 'react';
-interface Episodes {
-    id: string;
-    title: string;
-    description: string;
-    episode: number;
-    file: string;
-  }
+
+interface Episode {
+  id: string;
+  title: string;
+  description: string;
+  episode: number;
+  file: string;
+}
+
 interface FavouritesBtnProps {
-  episode: Episodes;
+  episode: Episode;
   isFavorite: boolean;
-  onAddToFavorites: (episode: Episodes) => void;
-  onRemoveFromFavorites: (episodeId: string) => void;
+  onToggleFavorite: (episode: Episode) => void;
 }
 
 const FavouritesBtn: React.FC<FavouritesBtnProps> = ({
   episode,
   isFavorite,
-  onAddToFavorites,
-  onRemoveFromFavorites,
+  onToggleFavorite,
 }) => {
   const FavoriteIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
@@ -32,27 +31,22 @@ const FavouritesBtn: React.FC<FavouritesBtnProps> = ({
   );
 
   const toggleFavorite = () => {
-    if (isFavorite) {
-      onRemoveFromFavorites(episode.id);
-    } else {
-      onAddToFavorites(episode);
-    }
+    onToggleFavorite(episode);
   };
 
   return (
     <button
-      key={episode.id} // Add a unique key for each instance
       onClick={toggleFavorite}
       className={`flex items-center ${
         isFavorite
           ? 'bg-gradient-to-r from-[#1A6DFF] to-[#C822FF]'
           : 'bg-zinc-700'
-      } text-zinc-100 px-4 py-2 rounded-md shadow-md transition-colors duration-300`}
+      } text-zinc-100 px-4 py-2 rounded-md shadow-md transition-colors duration-300 ml-4`}
     >
       <FavoriteIcon
         className={`w-6 h-6 mr-2 ${isFavorite ? 'fill-current' : ''}`}
       />
-     
+      {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
     </button>
   );
 };
