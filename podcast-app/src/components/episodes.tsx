@@ -30,6 +30,7 @@ const PodcastDetails: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedSeason, setSelectedSeason] = useState<Season | null>(null);
+  const [audioPlaying, setAudioPlaying] = useState(false); // State to track if audio is playing
 
   useEffect(() => {
     const fetchPodcastData = async () => {
@@ -57,8 +58,34 @@ const PodcastDetails: React.FC = () => {
     fetchPodcastData();
   }, [id]);
 
+  // Attach event listener when component mounts
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (audioPlaying) {
+        const confirmationMessage = 'Audio is currently playing. Are you sure you want to leave?';
+        event.preventDefault(); // Cancel the event as stated by the standard
+        event.returnValue = confirmationMessage; // Standard for most browsers
+        return confirmationMessage; // Needed for Chrome
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [audioPlaying]);
+
   const handleSeasonClick = (season: Season) => {
     setSelectedSeason(season);
+  };
+
+  const handleAudioPlay = () => {
+    setAudioPlaying(true);
+  };
+
+  const handleAudioPause = () => {
+    setAudioPlaying(false);
   };
 
   if (isLoading) {
@@ -66,83 +93,89 @@ const PodcastDetails: React.FC = () => {
   }
 
   if (error) {
-    return <div className='text-white'>Error: {error}</div>;
+    return <div>Error: {error}</div>;
   }
 
   if (!podcastData) {
-    return <div className='text-white'>No podcast data available.<s className='text-red-500'>Please check your internet conection</s>
-    </div>;
+    return (
+      <div className='text-white'>
+        No podcast data available. Please check your internet connection.
+      </div>
+    );
   }
 
-    return (
-        <div className="min-h-screen bg-zinc-900 text-zinc-100">
-            <div className="flex flex-col md:flex-row">
-                <aside className="w-full md:w-1/4 bg-zinc-800 p-4">
-                    <h2 className="text-xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[#1A6DFF] to-[#C822FF]">
-                        Seasons
-                    </h2>
-                    <ul>
-                        {podcastData.seasons.map((season, index) => (
-                            <li key={index} className="mb-2">
-                                <a
-                                    className={`block p-3 rounded transition-colors duration-300 ${season === selectedSeason
-                                            ? 'bg-gradient-to-r from-[#1A6DFF] to-[#C822FF] text-white'
-                                            : 'bg-zinc-700 hover:bg-zinc-600'
-                                        }`}
-                                    onClick={() => handleSeasonClick(season)}
-                                >
-                                    {season.title} ({season.episodes.length} episodes)
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-                </aside>
-                <main className="flex-1 p-4">
-                    <div className="flex items-center mb-8">
-                        <img
-                            src={podcastData.seasons[0].image}
-                            alt="Podcast Cover"
-                            className="w-32 h-32 mr-8 rounded-lg shadow-md"
-                        />
-                        <div>
-                            <h1 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-[#1A6DFF] to-[#C822FF]">
-                                {podcastData.title}
-                            </h1>
-                            <p className="text-zinc-400">{podcastData.description}</p>
-                        </div>
-                    </div>
-
-                    {selectedSeason && (
-                        <div>
-                            <h2 className="text-3xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-[#1A6DFF] to-[#C822FF]">
-                                {selectedSeason.title} ({selectedSeason.episodes.length} episodes)
-                            </h2>
-                            <div className="grid gap-6">
-                                {selectedSeason.episodes.map((episode, index) => (
-                                    <div
-                                        key={`${selectedSeason.season}-${index}`}
-                                        className="bg-zinc-800 p-6 rounded-lg shadow-md"
-                                    >
-                                        <div className="flex justify-between items-center mb-4">
-                                            <h3 className="text-2xl font-bold">{episode.title}</h3>
-                                        <FavouritesBtn></FavouritesBtn>
-
-                                        </div>
-                                        <p className="text-zinc-400 mb-4">{episode.description}</p>
-                                        <audio controls className="w-full">
-                                            <source src={episode.file} type="audio/mpeg" />
-                                            Your browser does not support the audio element.
-                                        </audio>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </main>
+  return (
+    <div className="min-h-screen bg-zinc-900 text-zinc-100">
+      <div className="flex flex-col md:flex-row">
+        <aside className="w-full md:w-1/4 bg-zinc-800 p-4">
+          <h2 className="text-xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[#1A6DFF] to-[#C822FF]">
+            Seasons
+          </h2>
+          <ul>
+            {podcastData.seasons.map((season, index) => (
+              <li key={index} className="mb-2">
+                <a
+                  className={`block p-3 rounded transition-colors duration-300 ${season === selectedSeason
+                    ? 'bg-gradient-to-r from-[#1A6DFF] to-[#C822FF] text-white'
+                    : 'bg-zinc-700 hover:bg-zinc-600'
+                  }`}
+                  onClick={() => handleSeasonClick(season)}
+                >
+                  {season.title} ({season.episodes.length} episodes)
+                </a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+        <main className="flex-1 p-4">
+          <div className="flex items-center mb-8">
+            <img
+              src={podcastData.seasons[0].image}
+              alt="Podcast Cover"
+              className="w-32 h-32 mr-8 rounded-lg shadow-md"
+            />
+            <div>
+              <h1 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-[#1A6DFF] to-[#C822FF]">
+                {podcastData.title}
+              </h1>
+              <p className="text-zinc-400">{podcastData.description}</p>
             </div>
-        </div>
-    );
-};
+          </div>
 
+          {selectedSeason && (
+            <div>
+              <h2 className="text-3xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-[#1A6DFF] to-[#C822FF]">
+                {selectedSeason.title} ({selectedSeason.episodes.length} episodes)
+              </h2>
+              <div className="grid gap-6">
+                {selectedSeason.episodes.map((episode, index) => (
+                  <div
+                    key={`${selectedSeason.season}-${index}`}
+                    className="bg-zinc-800 p-6 rounded-lg shadow-md"
+                  >
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-2xl font-bold">{episode.title}</h3>
+                      <FavouritesBtn />
+                    </div>
+                    <p className="text-zinc-400 mb-4">{episode.description}</p>
+                    <audio
+                      controls
+                      className="w-full"
+                      onPlay={handleAudioPlay}
+                      onPause={handleAudioPause}
+                    >
+                      <source src={episode.file} type="audio/mpeg" />
+                      Your browser does not support the audio element.
+                    </audio>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </main>
+      </div>
+    </div>
+  );
+};
 
 export default PodcastDetails;
