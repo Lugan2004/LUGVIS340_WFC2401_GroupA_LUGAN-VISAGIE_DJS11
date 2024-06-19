@@ -33,7 +33,7 @@ const PodcastDisplay: React.FC<PodcastDisplayProps> = ({ initialPodcastData }) =
     <div className="min-h-screen bg-zinc-900 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100">
       <div className="flex w-full flex-col md:flex-row">
         <main className="flex-1 p-4">
-          {podcastData && <Episodes podcastData={podcastData} />}
+          {podcastData && <Episodes/>}
         </main>
       </div>
     </div>

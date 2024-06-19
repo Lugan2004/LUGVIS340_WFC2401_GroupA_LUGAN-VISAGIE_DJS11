@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import FavouritesBtn from './favouritesBtn';
 import PlayButton from './Playbutton';
 
@@ -13,22 +13,21 @@ interface Episode {
 interface EpisodeProps {
   episode: Episode;
   onPlay: (episode: Episode) => void;
+  isFavorite: boolean;
   onToggleFavorite: (episode: Episode) => void;
 }
 
 const EpisodeCard: React.FC<EpisodeProps> = ({
   episode,
   onPlay,
+  isFavorite,
   onToggleFavorite,
 }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
-
   const handlePlay = () => {
     onPlay(episode);
   };
 
   const handleToggleFavorite = () => {
-    setIsFavorite((prevState) => !prevState);
     onToggleFavorite(episode);
   };
 

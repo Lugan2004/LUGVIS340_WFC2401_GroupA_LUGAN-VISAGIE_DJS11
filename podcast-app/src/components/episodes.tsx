@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import FavouritesBtn from './favouritesBtn';
-import { addToFavorites, removeFromFavorites, getFavorites } from "@/utils/localstorage";
+import { addToFavorites, removeFromFavorites, getFavorites, } from "@/utils/localstorage";
 import EpisodeCard from './EpisodeCard';
 import AudioPlayer from './AudioPlayer';
-import PlayButton from './Playbutton';
+
 
 interface Episode {
   id: string;
@@ -68,13 +67,13 @@ const PodcastDetails: React.FC = () => {
   }, [id]);
 
   const handleAddToFavorites = (episode: Episode) => {
-    setFavoriteEpisodeIds((prevFavoriteEpisodeIds) => [...prevFavoriteEpisodeIds, episode.id]);
     addToFavorites(episode);
+    setFavoriteEpisodeIds((prevFavoriteEpisodeIds) => [...prevFavoriteEpisodeIds, episode.id]);
   };
 
   const handleRemoveFromFavorites = (episodeId: string) => {
-    setFavoriteEpisodeIds((prevFavoriteEpisodeIds) => prevFavoriteEpisodeIds.filter((id) => id !== episodeId));
     removeFromFavorites(episodeId);
+    setFavoriteEpisodeIds((prevFavoriteEpisodeIds) => prevFavoriteEpisodeIds.filter((id) => id !== episodeId));
   };
 
   const handleSeasonClick = (season: Season) => {
@@ -153,7 +152,7 @@ const PodcastDetails: React.FC = () => {
                     key={`${selectedSeason.season}-${index}`}
                     episode={episode}
                     onPlay={handleEpisodePlay}
-                    // isFavorite={favoriteEpisodeIds.includes(episode.id)}
+                    isFavorite={favoriteEpisodeIds.includes(episode.id)}
                     onToggleFavorite={(ep) => {
                       if (favoriteEpisodeIds.includes(ep.id)) {
                         handleRemoveFromFavorites(ep.id);
