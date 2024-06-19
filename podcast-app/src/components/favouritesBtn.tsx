@@ -10,14 +10,14 @@ interface Episode {
 
 interface FavouritesBtnProps {
   episode: Episode;
-  isFavorite: boolean;
-  onToggleFavorite: (episode: Episode) => void;
+  onAddToFavorites: (episode: Episode) => void;
+  disabled: boolean;
 }
 
 const FavouritesBtn: React.FC<FavouritesBtnProps> = ({
   episode,
-  isFavorite,
-  onToggleFavorite,
+  onAddToFavorites,
+  disabled,
 }) => {
   const FavoriteIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
@@ -30,23 +30,24 @@ const FavouritesBtn: React.FC<FavouritesBtnProps> = ({
     </svg>
   );
 
-  const toggleFavorite = () => {
-    onToggleFavorite(episode);
+  const handleAddToFavorites = () => {
+    onAddToFavorites(episode);
   };
 
   return (
     <button
-      onClick={toggleFavorite}
+      onClick={handleAddToFavorites}
+      disabled={disabled}
       className={`flex items-center ${
-        isFavorite
-          ? 'bg-gradient-to-r from-[#1A6DFF] to-[#C822FF]'
-          : 'bg-zinc-700'
+        disabled
+          ? 'bg-gradient-to-r from-[#1A6DFF] to-[#C822FF] cursor-not-allowed'
+          : 'bg-zinc-700 hover:bg-zinc-600'
       } text-zinc-100 px-4 py-2 rounded-md shadow-md transition-colors duration-300 ml-4`}
     >
       <FavoriteIcon
-        className={`w-6 h-6 mr-2 ${isFavorite ? 'fill-current' : ''}`}
+        className={`w-6 h-6 mr-2 ${disabled ? 'fill-current' : ''}`}
       />
-      {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
+      Add to Favorites
     </button>
   );
 };

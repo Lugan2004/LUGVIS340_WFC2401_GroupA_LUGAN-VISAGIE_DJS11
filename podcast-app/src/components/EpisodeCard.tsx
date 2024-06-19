@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import FavouritesBtn from './favouritesBtn';
 import PlayButton from './Playbutton';
+import { isFavorite, addToFavorites } from '@/utils/localstorage';
 
 interface Episode {
   id: string;
@@ -13,22 +14,25 @@ interface Episode {
 interface EpisodeProps {
   episode: Episode;
   onPlay: (episode: Episode) => void;
-  isFavorite: boolean;
-  onToggleFavorite: (episode: Episode) => void;
 }
 
 const EpisodeCard: React.FC<EpisodeProps> = ({
   episode,
   onPlay,
-  isFavorite,
-  onToggleFavorite,
 }) => {
+  const [isFav, setIsFav] = useState<boolean>(isFavorite(episode.id));
+
+  useEffect(() => {
+    setIsFav(isFavorite(episode.id));
+  }, [episode.id]);
+
   const handlePlay = () => {
     onPlay(episode);
   };
 
-  const handleToggleFavorite = () => {
-    onToggleFavorite(episode);
+  const handleAddToFavorites = () => {
+    addToFavorites(episode);
+    setIsFav(true);
   };
 
   return (
@@ -42,8 +46,8 @@ const EpisodeCard: React.FC<EpisodeProps> = ({
           <PlayButton onClick={handlePlay} />
           <FavouritesBtn
             episode={episode}
-            isFavorite={isFavorite}
-            onToggleFavorite={handleToggleFavorite}
+            onAddToFavorites={handleAddToFavorites}
+            disabled={isFav}
           />
           <button
             onClick={() => window.open(episode.file, '_blank')}

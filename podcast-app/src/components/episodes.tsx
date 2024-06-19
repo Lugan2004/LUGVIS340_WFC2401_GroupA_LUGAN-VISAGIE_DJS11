@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { addToFavorites, removeFromFavorites, getFavorites, } from "@/utils/localstorage";
+import { addToFavorites, removeFromFavorites, getFavorites } from '@/utils/localstorage';
 import EpisodeCard from './EpisodeCard';
 import AudioPlayer from './AudioPlayer';
-
 
 interface Episode {
   id: string;
@@ -36,7 +35,6 @@ const PodcastDetails: React.FC = () => {
   const [selectedSeason, setSelectedSeason] = useState<Season | null>(null);
   const [selectedEpisode, setSelectedEpisode] = useState<Episode | null>(null);
   const [audioPlayerVisible, setAudioPlayerVisible] = useState(false);
-  const [favoriteEpisodeIds, setFavoriteEpisodeIds] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchPodcastData = async () => {
@@ -62,18 +60,10 @@ const PodcastDetails: React.FC = () => {
     };
 
     fetchPodcastData();
-    const storedFavorites = getFavorites();
-    setFavoriteEpisodeIds(storedFavorites.map((episode) => episode.id));
   }, [id]);
-
-  const handleAddToFavorites = (episode: Episode) => {
-    addToFavorites(episode);
-    setFavoriteEpisodeIds((prevFavoriteEpisodeIds) => [...prevFavoriteEpisodeIds, episode.id]);
-  };
 
   const handleRemoveFromFavorites = (episodeId: string) => {
     removeFromFavorites(episodeId);
-    setFavoriteEpisodeIds((prevFavoriteEpisodeIds) => prevFavoriteEpisodeIds.filter((id) => id !== episodeId));
   };
 
   const handleSeasonClick = (season: Season) => {
@@ -152,14 +142,6 @@ const PodcastDetails: React.FC = () => {
                     key={`${selectedSeason.season}-${index}`}
                     episode={episode}
                     onPlay={handleEpisodePlay}
-                    isFavorite={favoriteEpisodeIds.includes(episode.id)}
-                    onToggleFavorite={(ep) => {
-                      if (favoriteEpisodeIds.includes(ep.id)) {
-                        handleRemoveFromFavorites(ep.id);
-                      } else {
-                        handleAddToFavorites(ep);
-                      }
-                    }}
                   />
                 ))}
               </div>
