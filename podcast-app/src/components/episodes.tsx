@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { addToFavorites, removeFromFavorites, getFavorites } from '@/utils/localstorage';
 import EpisodeCard from './EpisodeCard';
 import AudioPlayer from './AudioPlayer';
 
@@ -45,7 +44,7 @@ const PodcastDetails: React.FC = () => {
 
           if (data) {
             setPodcastData(data);
-            setSelectedSeason(data.seasons[0]); // Set the first season as the initial selected season
+            setSelectedSeason(data.seasons[0]);
           } else {
             setError('Error fetching podcast data');
           }
@@ -62,14 +61,6 @@ const PodcastDetails: React.FC = () => {
     fetchPodcastData();
   }, [id]);
 
-  const handleRemoveFromFavorites = (episodeId: string) => {
-    removeFromFavorites(episodeId);
-  };
-
-  const handleSeasonClick = (season: Season) => {
-    setSelectedSeason(season);
-  };
-
   const handleEpisodePlay = (episode: Episode) => {
     setSelectedEpisode(episode);
     setAudioPlayerVisible(true);
@@ -85,7 +76,7 @@ const PodcastDetails: React.FC = () => {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className="text-white">Error: {error}</div>;
   }
 
   if (!podcastData) {
@@ -102,18 +93,18 @@ const PodcastDetails: React.FC = () => {
           <ul>
             {podcastData.seasons.map((season, index) => (
               <li key={index} className="mb-2">
-                <a
-                  className={`block p-3 rounded transition-colors duration-300 ${season === selectedSeason
+                <button
+                  className={`block w-full p-3 rounded transition-colors duration-300 ${
+                    season === selectedSeason
                       ? 'bg-gradient-to-r from-[#1A6DFF] to-[#C822FF] text-white'
                       : 'bg-zinc-700 hover:bg-zinc-600'
-                    }`}
-                  onClick={() => handleSeasonClick(season)}
+                  }`}
+                  onClick={() => setSelectedSeason(season)}
                 >
                   {season.title} ({season.episodes.length} episodes)
-                </a>
+                </button>
               </li>
             ))}
-
           </ul>
         </aside>
         <main className="flex-1 p-4">
@@ -140,6 +131,8 @@ const PodcastDetails: React.FC = () => {
                 {selectedSeason.episodes.map((episode, index) => (
                   <EpisodeCard
                     key={`${selectedSeason.season}-${index}`}
+                    podcast={podcastData}
+                    season={selectedSeason}
                     episode={episode}
                     onPlay={handleEpisodePlay}
                   />

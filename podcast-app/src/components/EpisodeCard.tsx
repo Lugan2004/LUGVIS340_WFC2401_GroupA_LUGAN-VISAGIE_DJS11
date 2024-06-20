@@ -1,56 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import PlayButton from './Playbutton';
 import { isFavorite, addToFavorites, removeFromFavorites } from '@/utils/localstorage';
-
-interface Episode {
-  title: string;
-  description: string;
-  episode: number;
-  file: string;
-}
-
-interface Season {
-  season: number;
-  title: string;
-  image: string;
-  episodes: Episode[];
-}
-
-interface Podcast {
-  id: string;
-  title: string;
-  description: string;
-  seasons: Season[];
-}
+import { Episode, Podcast, Season } from './types';
 
 interface EpisodeCardProps {
-  podcastId: string;
-  season: number;
-  episode: Episode;
+  podcast?: Podcast;
+  season?: Season;
+  episode?: Episode;
   onPlay: (episode: Episode) => void;
 }
 
 const EpisodeCard: React.FC<EpisodeCardProps> = ({
-  podcastId,
+  podcast,
   season,
   episode,
   onPlay,
 }) => {
-  const [isFav, setIsFav] = useState<boolean>(isFavorite(podcastId, season, episode.episode));
+  const [isFav, setIsFav] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsFav(isFavorite(podcastId, season, episode.episode));
-  }, [podcastId, season, episode.episode]);
+    if (podcast?.id && season?.season && episode?.episode) {
+      setIsFav(isFavorite(podcast.id, season.season, episode.episode));
+    }
+  }, [podcast?.id, season?.season, episode?.episode]);
 
   const handlePlay = () => {
-    onPlay(episode);
+    if (episode) {
+      onPlay(episode);
+    }
   };
 
   const handleToggleFavorite = () => {
+    if (!podcast?.id || !season?.season || !episode?.episode) return;
+
     if (isFav) {
-      removeFromFavorites(podcastId, season, episode.episode);
+      removeFromFavorites(podcast.id, season.season, episode.episode);
     } else {
-      addToFavorites(podcastId, season, episode);
+      addToFavorites({
+        podcastId: podcast.id,
+        seasonNumber: season.season,
+        ...episode,
+      });
     }
     setIsFav(!isFav);
   };
@@ -66,12 +56,18 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({
     </svg>
   );
 
+  if (!podcast || !season || !episode) {
+    return null; // or return a loading state or error message
+  }
+
   return (
     <div className="bg-zinc-800 p-6 rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-4">
         <div>
           <h3 className="text-2xl font-bold">{episode.title}</h3>
-          <p className="text-sm text-zinc-400">Episode {episode.episode}</p>
+          <p className="text-sm text-zinc-400">
+            {podcast.title} - {season.title}, Episode {episode.episode}
+          </p>
         </div>
         <div className="flex items-center">
           <PlayButton onClick={handlePlay} />

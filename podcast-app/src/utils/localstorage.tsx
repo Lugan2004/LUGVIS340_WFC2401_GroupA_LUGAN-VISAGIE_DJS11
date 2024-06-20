@@ -1,16 +1,6 @@
 // localStorage.ts
 
-interface Episode {
-  title: string;
-  description: string;
-  episode: number;
-  file: string;
-}
-
-interface FavoriteEpisode extends Episode {
-  podcastId: string;
-  season: number;
-}
+import { FavoriteEpisode } from "@/components/types";
 
 export const getFavorites = (): FavoriteEpisode[] => {
   if (typeof window !== 'undefined') {
@@ -26,24 +16,23 @@ const saveFavorites = (favorites: FavoriteEpisode[]): void => {
   }
 };
 
-export const addToFavorites = (podcastId: string, season: number, episode: Episode): void => {
+export const addToFavorites = (favoriteEpisode: FavoriteEpisode): void => {
   const favorites = getFavorites();
-  const favoriteEpisode: FavoriteEpisode = { ...episode, podcastId, season };
   const updatedFavorites = [...favorites, favoriteEpisode];
   saveFavorites(updatedFavorites);
 };
 
-export const removeFromFavorites = (podcastId: string, season: number, episodeNumber: number): void => {
+export const removeFromFavorites = (podcastId: string, seasonNumber: number, episodeNumber: number): void => {
   const favorites = getFavorites();
   const updatedFavorites = favorites.filter(
-    (fav) => !(fav.podcastId === podcastId && fav.season === season && fav.episode === episodeNumber)
+    (fav) => !(fav.podcastId === podcastId && fav.seasonNumber === seasonNumber && fav.episode === episodeNumber)
   );
   saveFavorites(updatedFavorites);
 };
 
-export const isFavorite = (podcastId: string, season: number, episodeNumber: number): boolean => {
+export const isFavorite = (podcastId: string, seasonNumber: number, episodeNumber: number): boolean => {
   const favorites = getFavorites();
   return favorites.some((fav) => 
-    fav.podcastId === podcastId && fav.season === season && fav.episode === episodeNumber
+    fav.podcastId === podcastId && fav.seasonNumber === seasonNumber && fav.episode === episodeNumber
   );
 };
