@@ -1,17 +1,18 @@
 // localStorage.ts
 
-// Define the shape of an episode object
 interface Episode {
-  id: string;
   title: string;
   description: string;
   episode: number;
   file: string;
-  // Add any other necessary properties
 }
 
-// Helper function to get favorites from local storage
-export const getFavorites = (): Episode[] => {
+interface FavoriteEpisode extends Episode {
+  podcastId: string;
+  season: number;
+}
+
+export const getFavorites = (): FavoriteEpisode[] => {
   if (typeof window !== 'undefined') {
     const favorites = window.localStorage.getItem('favorites');
     return favorites ? JSON.parse(favorites) : [];
@@ -19,29 +20,30 @@ export const getFavorites = (): Episode[] => {
   return [];
 };
 
-// Helper function to save favorites to local storage
-const saveFavorites = (favorites: Episode[]): void => {
+const saveFavorites = (favorites: FavoriteEpisode[]): void => {
   if (typeof window !== 'undefined') {
     window.localStorage.setItem('favorites', JSON.stringify(favorites));
   }
 };
 
-// Function to add an episode to favorites
-export const addToFavorites = (episode: Episode): void => {
+export const addToFavorites = (podcastId: string, season: number, episode: Episode): void => {
   const favorites = getFavorites();
-  const updatedFavorites = [...favorites, episode];
+  const favoriteEpisode: FavoriteEpisode = { ...episode, podcastId, season };
+  const updatedFavorites = [...favorites, favoriteEpisode];
   saveFavorites(updatedFavorites);
 };
 
-// Function to remove an episode from favorites
-export const removeFromFavorites = (episodeId: string): void => {
+export const removeFromFavorites = (podcastId: string, season: number, episodeNumber: number): void => {
   const favorites = getFavorites();
-  const updatedFavorites = favorites.filter((fav) => fav.id !== episodeId);
+  const updatedFavorites = favorites.filter(
+    (fav) => !(fav.podcastId === podcastId && fav.season === season && fav.episode === episodeNumber)
+  );
   saveFavorites(updatedFavorites);
 };
 
-// Function to check if an episode is in favorites
-export const isFavorite = (episodeId: string): boolean => {
+export const isFavorite = (podcastId: string, season: number, episodeNumber: number): boolean => {
   const favorites = getFavorites();
-  return favorites.some((fav) => fav.id === episodeId);
+  return favorites.some((fav) => 
+    fav.podcastId === podcastId && fav.season === season && fav.episode === episodeNumber
+  );
 };
