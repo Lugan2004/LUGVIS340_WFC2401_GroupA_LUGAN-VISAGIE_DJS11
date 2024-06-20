@@ -1,11 +1,13 @@
 // types.ts
 
+// In types.ts or wherever you define your types
 export interface Episode {
-    title: string;
-    description: string;
-    episode: number;
-    file: string;
-  }
+  id: string;
+  title: string;
+  description: string;
+  episode: number;
+  file: string;
+}
   
   export interface Season {
     season: number;

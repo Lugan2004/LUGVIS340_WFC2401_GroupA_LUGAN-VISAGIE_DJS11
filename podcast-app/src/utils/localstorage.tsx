@@ -2,7 +2,11 @@
 
 import { FavoriteEpisode } from "@/components/types";
 
-export const getFavorites = (): FavoriteEpisode[] => {
+export interface TimestampedFavoriteEpisode extends FavoriteEpisode {
+  addedAt: number;
+}
+
+export const getFavorites = (): TimestampedFavoriteEpisode[] => {
   if (typeof window !== 'undefined') {
     const favorites = window.localStorage.getItem('favorites');
     return favorites ? JSON.parse(favorites) : [];
@@ -10,7 +14,7 @@ export const getFavorites = (): FavoriteEpisode[] => {
   return [];
 };
 
-const saveFavorites = (favorites: FavoriteEpisode[]): void => {
+const saveFavorites = (favorites: TimestampedFavoriteEpisode[]): void => {
   if (typeof window !== 'undefined') {
     window.localStorage.setItem('favorites', JSON.stringify(favorites));
   }
@@ -18,7 +22,11 @@ const saveFavorites = (favorites: FavoriteEpisode[]): void => {
 
 export const addToFavorites = (favoriteEpisode: FavoriteEpisode): void => {
   const favorites = getFavorites();
-  const updatedFavorites = [...favorites, favoriteEpisode];
+  const timestampedEpisode: TimestampedFavoriteEpisode = {
+    ...favoriteEpisode,
+    addedAt: Date.now()
+  };
+  const updatedFavorites = [...favorites, timestampedEpisode];
   saveFavorites(updatedFavorites);
 };
 
@@ -28,6 +36,12 @@ export const removeFromFavorites = (podcastId: string, seasonNumber: number, epi
     (fav) => !(fav.podcastId === podcastId && fav.seasonNumber === seasonNumber && fav.episode === episodeNumber)
   );
   saveFavorites(updatedFavorites);
+};
+
+export const removeAllFavorites = (): void => {
+  if (typeof window !== 'undefined') {
+    window.localStorage.removeItem('favorites');
+  }
 };
 
 export const isFavorite = (podcastId: string, seasonNumber: number, episodeNumber: number): boolean => {
