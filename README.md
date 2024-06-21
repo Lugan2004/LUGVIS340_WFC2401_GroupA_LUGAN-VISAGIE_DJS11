@@ -1,4 +1,4 @@
-# Podcast Web App
+# Podcast Web App ✨
 
 Welcome to our Podcast Web App project! This application allows users to discover and listen to podcasts across various genres. Built with React, TypeScript, and Next.js, it offers a seamless browsing and listening experience.
 
@@ -14,6 +14,7 @@ Welcome to our Podcast Web App project! This application allows users to discove
 ## Demo
 
 Check out the live demo [here](https://lugvis-340-wfc-2401-group-a-lugan-visagie-djs-11.vercel.app/). Use the sign-in button to access the home page.
+### NOTE: There is no Authentication so there is no need for a account or any details, just click the sign in button and it will take you to the home page.
 
 ## Getting Started
 
@@ -22,9 +23,12 @@ To run this project locally, follow these steps:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/podcast-web-app.git
+   git clone https://github.com/your-username/LUGVIS340_WFC2401_GroupA_LUGAN-VISAGIE_DJS11
+
+- or download the zip file and unzip the folder(prefered)
+- then open it in vs code
 2. Navigate into the project directory:
-    cd podcast-web-app/podcast-app
+    cd podcast-app
 3. Install dependencies:
     npm install
 4. Run the development server:
@@ -35,3 +39,14 @@ To run this project locally, follow these steps:
 - Styling: Tailwind CSS
 - State Management: React Context API
 - API Integration: Fetch API for podcast data
+
+## Contact
+
+For any questions, feedback, or collaboration inquiries, feel free to reach out:
+
+- **Email**: [Email](luganvisagie42@gmail.com)📧
+- **LinkedIn**: [LinkendIn](https://www.linkedin.com/in/lugan-visagie-ab3794268)💼
+- **GitHub**: [Github](https://github.com/Lugan2004)🔥
+
+We appreciate your interest in our project and look forward to hearing from you!
+
