@@ -16,6 +16,7 @@ interface PodcastData {
 const CarouselComponent: React.FC = () => {
   const [index, setIndex] = useState<number>(0);
   const [data, setData] = useState<PodcastData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // State to track loading state
 
   useEffect(() => {
     // Fetch data from the API
@@ -51,6 +52,15 @@ const CarouselComponent: React.FC = () => {
 
   const wordLimit = window.innerWidth < 768 ? 30 : 100;
 
+  const handleImageLoad = () => {
+    setLoading(false); // Set loading state to false when image loads
+  };
+
+  const handleImageError = () => {
+    // Handle image loading error if needed
+    setLoading(false); // Ensure loading state is updated even on error
+  };
+
   return (
     <div className="h-96 w-full relative">
       <div className="carousel overflow-hidden">
@@ -61,10 +71,17 @@ const CarouselComponent: React.FC = () => {
               idx === index ? 'opacity-100' : 'opacity-0'
             }`}
           >
+            {loading && (
+              <div className="w-full h-96 bg-gray-200 flex items-center justify-center">
+                Loading...
+              </div>
+            )}
             <img
-              className="w-full h-96 object-cover"
+              className={`w-full h-96 object-cover ${loading ? 'hidden' : ''}`}
               src={item.image}
               alt={item.title}
+              onLoad={handleImageLoad}
+              onError={handleImageError}
             />
             <div className="carousel-caption absolute inset-0 flex flex-col items-start justify-end text-white bg-gradient-to-t from-black p-8">
               <h3 className="text-3xl font-bold mb-4 font-serif">{item.title}</h3>
