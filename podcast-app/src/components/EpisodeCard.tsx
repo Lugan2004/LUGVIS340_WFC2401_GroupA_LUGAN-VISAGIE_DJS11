@@ -17,6 +17,7 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({
   onPlay,
 }) => {
   const [isFav, setIsFav] = useState<boolean>(false);
+  const [showFullDescription, setShowFullDescription] = useState<boolean>(false);
 
   useEffect(() => {
     if (podcast?.id && season?.season && episode?.episode) {
@@ -45,14 +46,24 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({
     setIsFav(!isFav);
   };
 
+  const toggleDescription = () => {
+    setShowFullDescription(!showFullDescription);
+  };
+
   const FavoriteIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      fill="currentColor"
+      fill={isFav ? "currentColor" : "none"}
+      stroke="currentColor"
       {...props}
     >
-      <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M12 21.29l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.47L12 21.29z"
+      />
     </svg>
   );
 
@@ -62,14 +73,14 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({
 
   return (
     <div className="bg-zinc-800 p-6 rounded-lg shadow-md">
-      <div className="flex justify-between items-center mb-4">
-        <div>
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+        <div className="sm:mr-4">
           <h3 className="text-2xl font-bold">{episode.title}</h3>
           <p className="text-sm text-zinc-400">
             {podcast.title} - {season.title}, Episode {episode.episode}
           </p>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center mt-4 sm:mt-0">
           <PlayButton onClick={handlePlay} />
           <button
             onClick={handleToggleFavorite}
@@ -79,33 +90,23 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({
                 : 'bg-zinc-700 hover:bg-zinc-600'
             } text-zinc-100 px-4 py-2 rounded-md shadow-md transition-colors duration-300 ml-4`}
           >
-            <FavoriteIcon
-              className={`w-6 h-6 mr-2 ${isFav ? 'fill-current' : ''}`}
-            />
-            {isFav ? 'Remove from Favorites' : 'Add to Favorites'}
-          </button>
-          <button
-            onClick={() => window.open(episode.file, '_blank')}
-            className="bg-zinc-700 text-zinc-100 px-4 py-2 rounded-md shadow-md transition-colors duration-300 ml-4"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-              />
-            </svg>
-            <span className="ml-2">Download</span>
+            <FavoriteIcon className="w-6 h-6" />
           </button>
         </div>
       </div>
-      <p className="text-zinc-400 mb-4">{episode.description}</p>
+      <div className="sm:flex sm:items-start">
+        <p className={`text-zinc-400 mb-4 ${!showFullDescription ? 'max-h-16 overflow-hidden' : ''}`}>
+          {episode.description}
+        </p>
+        {episode.description.length > 200 && (
+          <button
+            onClick={toggleDescription}
+            className="text-blue-500 hover:text-blue-700"
+          >
+            {showFullDescription ? 'See less' : 'See more'}
+          </button>
+        )}
+      </div>
     </div>
   );
 };

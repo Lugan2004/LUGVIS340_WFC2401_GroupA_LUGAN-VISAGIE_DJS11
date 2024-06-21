@@ -44,10 +44,12 @@ const CarouselComponent: React.FC = () => {
     setIndex(prevIndex => (prevIndex === data.length - 1 ? 0 : prevIndex + 1));
   };
 
-  const truncateDescription = (description: string) => {
+  const truncateDescription = (description: string, wordLimit: number) => {
     const words = description.split(' ');
-    return words.slice(0, 100).join(' ') + (words.length > 100 ? '...' : '');
+    return words.slice(0, wordLimit).join(' ') + (words.length > wordLimit ? '...' : '');
   };
+
+  const wordLimit = window.innerWidth < 768 ? 30 : 100;
 
   return (
     <div className="h-96 w-full relative">
@@ -67,7 +69,7 @@ const CarouselComponent: React.FC = () => {
             <div className="carousel-caption absolute inset-0 flex flex-col items-start justify-end text-white bg-gradient-to-t from-black p-8">
               <h3 className="text-3xl font-bold mb-4 font-serif">{item.title}</h3>
               <p className="text-lg mb-6 font-sans leading-6">
-                {truncateDescription(item.description)}
+                {truncateDescription(item.description, wordLimit)}
               </p>
               {/* <ListenNowButton podcastId={PodcastData.id} /> */}
             </div>
@@ -115,10 +117,10 @@ const CarouselComponent: React.FC = () => {
         </button>
       </div>
       <div className="carousel-indicators absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 pointer-events-none">
-        {data.map((_, idx) => (
+        {data.slice(0, 3).map((_, idx) => (
           <button
             key={idx}
-            className={`h-4 w-4 rounded-full transition-colors duration-300 ${
+            className={`h-3 w-3 md:h-4 md:w-4 lg:h-5 lg:w-5 rounded-full transition-colors duration-300 ${
               idx === index ? 'bg-white' : 'bg-gray-400'
             } pointer-events-auto`}
             onClick={() => handleSelect(idx)}

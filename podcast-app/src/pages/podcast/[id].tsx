@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
+import { useEffect, useState } from 'react';
 import PodcastDisplay from '@/components/PodcastDisplay';
-import "@/app/globals.css"
+import '@/app/globals.css';
 import Navbar from '@/components/Navbar';
 
 interface PodcastData {
@@ -29,12 +30,40 @@ interface PodcastPageProps {
 }
 
 const PodcastPage: React.FC<PodcastPageProps> = ({ podcastData }) => {
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+
+  const handleAudioPlay = () => {
+    setIsAudioPlaying(true);
+  };
+
+  const handleAudioPause = () => {
+    setIsAudioPlaying(false);
+  };
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (isAudioPlaying) {
+        event.preventDefault();
+        event.returnValue = ''; // For most browsers
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isAudioPlaying]);
+
   return (
     <>
-    <Navbar />
-    <PodcastDisplay initialPodcastData={podcastData} />
+      <Navbar />
+      <PodcastDisplay
+        initialPodcastData={podcastData}
+        onAudioPlay={handleAudioPlay}
+        onAudioPause={handleAudioPause}
+      />
     </>
-    
   );
 };
 

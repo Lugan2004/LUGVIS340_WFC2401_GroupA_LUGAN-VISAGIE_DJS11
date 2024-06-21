@@ -13,7 +13,6 @@ const PlayButton: React.FC<PlayButtonProps> = ({ onClick }) => {
       <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3l14 9-14 9V3z" />
       </svg>
-      <span className="ml-2">Play Episode</span>
     </button>
   );
 };
