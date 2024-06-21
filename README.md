@@ -44,9 +44,9 @@ To run this project locally, follow these steps:
 
 For any questions, feedback, or collaboration inquiries, feel free to reach out:
 
-- **Email**: [Email](luganvisagie42@gmail.com)📧
-- **LinkedIn**: [LinkendIn](https://www.linkedin.com/in/lugan-visagie-ab3794268)💼
-- **GitHub**: [Github](https://github.com/Lugan2004)🔥
+- **Email**: (luganvisagie42@gmail.com)📧
+- **LinkedIn**: (https://www.linkedin.com/in/lugan-visagie-ab3794268)💼
+- **GitHub**: (https://github.com/Lugan2004)🔥
 
 We appreciate your interest in our project and look forward to hearing from you!
 
