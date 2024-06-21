@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import SortingBar from './SortingBar';
 import ListenNowButton from './ListenNowBtn';
 import Fuse from 'fuse.js';
+import Image from 'next/image';
 
 interface Podcast {
   id: string;
@@ -54,12 +55,13 @@ const PodcastCard = styled.div`
   }
 `;
 
-const PodcastImage = styled.img`
+const PodcastImageContainer = styled.div`
   width: 100%;
   height: 200px;
-  object-fit: cover;
-  border-radius: 8px;
+  position: relative;
   margin-bottom: 1rem;
+  border-radius: 8px;
+  overflow: hidden;
 `;
 
 const PodcastTitle = styled.h2`
@@ -131,7 +133,14 @@ const PodcastCards: React.FC<PodcastCardsProps> = ({ setIsLoading }) => {
       <PodcastGrid>
         {filteredPodcasts.map((podcast) => (
           <PodcastCard key={podcast.id}>
-            <PodcastImage src={podcast.image} alt={podcast.title} />
+            <PodcastImageContainer>
+              <Image
+                src={podcast.image}
+                alt={podcast.title}
+                layout="fill"
+                objectFit="cover"
+              />
+            </PodcastImageContainer>
             <PodcastTitle>{podcast.title}</PodcastTitle>
             <PodcastInfo>Seasons: {podcast.seasons}</PodcastInfo>
             <PodcastInfo>
