@@ -98,14 +98,6 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({
         <p className={`text-zinc-400 mb-4 ${!showFullDescription ? 'max-h-16 overflow-hidden' : ''}`}>
           {episode.description}
         </p>
-        {episode.description.length > 200 && (
-          <button
-            onClick={toggleDescription}
-            className="text-blue-500 hover:text-blue-700"
-          >
-            {showFullDescription ? 'See less' : 'See more'}
-          </button>
-        )}
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import SortingBar from './SortingBar';
 import ListenNowButton from './ListenNowBtn';
 import Fuse from 'fuse.js';
@@ -28,6 +29,51 @@ interface PodcastCardsProps {
   setIsLoading: (isLoading: boolean) => void;
 }
 
+const PodcastCardsContainer = styled.div`
+  background: #141414;
+  min-height: 100vh;
+  padding: 2rem;
+`;
+
+const PodcastGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+`;
+
+const PodcastCard = styled.div`
+  background: #242323;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const PodcastImage = styled.img`
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+`;
+
+const PodcastTitle = styled.h2`
+  color: #ffffff;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+`;
+
+const PodcastInfo = styled.p`
+  color: #b3b3b3;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+`;
+
 const PodcastCards: React.FC<PodcastCardsProps> = ({ setIsLoading }) => {
   const [podcasts, setPodcasts] = useState<Podcast[]>([]);
   const [filteredPodcasts, setFilteredPodcasts] = useState<Podcast[]>([]);
@@ -43,12 +89,12 @@ const PodcastCards: React.FC<PodcastCardsProps> = ({ setIsLoading }) => {
           genres: podcast.genres.map((genreId) => genreMap[genreId] || genreId),
           updated: new Date(podcast.updated),
         }));
-
+        
         // Sort podcasts alphabetically by title
-        const sortedPodcasts = podcastsWithGenreNames.sort((a: { title: string }, b: { title: any }) =>
+        const sortedPodcasts = podcastsWithGenreNames.sort((a: { title: string }, b: { title: string }) => 
           a.title.localeCompare(b.title)
         );
-
+        
         setPodcasts(sortedPodcasts);
         setFilteredPodcasts(sortedPodcasts);
       } catch (error) {
@@ -57,6 +103,7 @@ const PodcastCards: React.FC<PodcastCardsProps> = ({ setIsLoading }) => {
         setIsLoading(false);
       }
     };
+
     fetchPodcasts();
   }, [setIsLoading]);
 
@@ -75,45 +122,35 @@ const PodcastCards: React.FC<PodcastCardsProps> = ({ setIsLoading }) => {
   }, [searchTerm, podcasts]);
 
   return (
-    <div>
+    <PodcastCardsContainer>
       <SortingBar
         podcasts={podcasts}
         onSort={(sortedPodcasts) => setFilteredPodcasts(sortedPodcasts)}
         onFilter={(filteredPodcasts) => setFilteredPodcasts(filteredPodcasts)}
       />
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 my-6">
+      <PodcastGrid>
         {filteredPodcasts.map((podcast) => (
-          <div
-            key={podcast.id}
-            className="bg-gradient-to-br from-zinc-800 to-zinc-900 text-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg"
-          >
-            <img
-              src={podcast.image}
-              alt={podcast.title}
-              className="w-full h-48 object-cover"
-            />
-            <div className="p-4">
-              <h2 className="text-xl font-semibold mb-2">{podcast.title}</h2>
-              <p className="text-gray-300 mb-1">Seasons: {podcast.seasons}</p>
-              <p className="text-gray-300 mb-1">
-                Genres: {podcast.genres.map((genre) => genreMap[genre] || genre).join(', ')}
-              </p>
-              <p className="text-gray-300 mb-4">
-                Last Updated: {podcast.updated.toLocaleDateString('en-US', {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </p>
-              <div className="flex justify-start items-center my-auto">
-                <ListenNowButton podcastId={podcast.id} />
-              </div>
-            </div>
-          </div>
+          <PodcastCard key={podcast.id}>
+            <PodcastImage src={podcast.image} alt={podcast.title} />
+            <PodcastTitle>{podcast.title}</PodcastTitle>
+            <PodcastInfo>Seasons: {podcast.seasons}</PodcastInfo>
+            <PodcastInfo>
+              Genres: {podcast.genres.join(', ')}
+            </PodcastInfo>
+            <PodcastInfo>
+              Last Updated:{' '}
+              {podcast.updated.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
+            </PodcastInfo>
+            <ListenNowButton podcastId={podcast.id} />
+          </PodcastCard>
         ))}
-      </div>
-    </div>
+      </PodcastGrid>
+    </PodcastCardsContainer>
   );
 };
 

@@ -84,7 +84,7 @@ const SortingBar: React.FC<SortingBarProps> = ({ podcasts, onSort, onFilter }) =
   };
 
   return (
-    <div className="bg-zinc-900 p-4 rounded-lg border-b-4 border-t-4 border-gradient-to-r">
+    <div className="bg-zinc-900 p-4 mb-4 rounded-lg border-b-4 border-t-4 border-gradient-to-r">
       <div className="flex items-center justify-between">
         <button
           className="bg-zinc-700 text-gray-400 px-4 py-2 rounded-md shadow md:hidden"

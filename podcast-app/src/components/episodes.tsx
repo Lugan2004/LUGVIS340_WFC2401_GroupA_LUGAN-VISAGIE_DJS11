@@ -85,46 +85,46 @@ const PodcastDetails: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-zinc-900 text-zinc-100">
-      <div className="flex flex-col md:flex-row">
-        <aside className="w-full md:w-1/4 bg-zinc-800 p-4">
+      <div className="flex flex-col lg:flex-row">
+        <aside className="w-full lg:w-1/4 bg-zinc-800 p-4 lg:min-h-screen">
           <h2 className="text-xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[#1A6DFF] to-[#C822FF]">
             Seasons
           </h2>
-          <ul>
+          <ul className="flex flex-row lg:flex-col overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0">
             {podcastData.seasons.map((season, index) => (
-              <li key={index} className="mb-2">
+              <li key={index} className="mb-2 mr-2 lg:mr-0 flex-shrink-0 lg:flex-shrink">
                 <button
-                  className={`block w-full p-3 rounded transition-colors duration-300 ${
+                  className={`block w-full p-3 rounded transition-colors duration-300 whitespace-nowrap lg:whitespace-normal ${
                     season === selectedSeason
                       ? 'bg-gradient-to-r from-[#1A6DFF] to-[#C822FF] text-white'
                       : 'bg-zinc-700 hover:bg-zinc-600'
                   }`}
                   onClick={() => setSelectedSeason(season)}
                 >
-                  {season.title} ({season.episodes.length} episodes)
+                  {season.title} ({season.episodes.length})
                 </button>
               </li>
             ))}
           </ul>
         </aside>
         <main className="flex-1 p-4">
-          <div className="flex items-center mb-8">
+          <div className="flex flex-col sm:flex-row items-center mb-8">
             <img
               src={podcastData.seasons[0].image}
               alt="Podcast Cover"
-              className="w-32 h-32 mr-8 rounded-lg shadow-md"
+              className="w-32 h-32 mb-4 sm:mb-0 sm:mr-8 rounded-lg shadow-md"
             />
             <div>
-              <h1 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-[#1A6DFF] to-[#C822FF]">
+              <h1 className="text-2xl sm:text-4xl font-bold mb-2 text-center sm:text-left text-transparent bg-clip-text bg-gradient-to-r from-[#1A6DFF] to-[#C822FF]">
                 {podcastData.title}
               </h1>
-              <p className="text-zinc-400">{podcastData.description}</p>
+              <p className="text-zinc-400 text-center sm:text-left">{podcastData.description}</p>
             </div>
           </div>
 
           {selectedSeason && (
             <div>
-              <h2 className="text-3xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-[#1A6DFF] to-[#C822FF]">
+              <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-[#1A6DFF] to-[#C822FF]">
                 {selectedSeason.title} ({selectedSeason.episodes.length} episodes)
               </h2>
               <div className="grid gap-6">
