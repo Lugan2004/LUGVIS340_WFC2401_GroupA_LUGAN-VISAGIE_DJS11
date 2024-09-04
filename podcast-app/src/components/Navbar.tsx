@@ -2,16 +2,6 @@
 import Link from 'next/link';
 import { useState, useEffect, SetStateAction } from 'react';
 
-interface PodcastData {
-    id: string;
-    title: string;
-    description: string;
-    image: string;
-    seasons: number;
-    genres: string[];
-    updated: string;
-  }
-
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
@@ -70,13 +60,12 @@ export default function Navbar() {
                     <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                         <Link href="/home" className="text-white hover:text-zinc-300 active:text-zinc-500 block px-3 py-2 rounded-md text-base font-medium">Home</Link>
                         <Link href="/favourites" className="text-white hover:text-zinc-300 block px-3 py-2 rounded-md text-base font-medium">Favourites</Link>
-                        <Link href="/" className="text-white hover:text-zinc-300">Sign In</Link>
                     </div>
                 </div>
                 <div className="hidden md:flex space-x-4">
                     <Link href="/home" className="text-white hover:text-zinc-300 active:text-zinc-500">Home</Link>
                     <Link href="/favourites" className="text-white hover:text-zinc-300">Favourites</Link>
-                    <Link href="/" className="text-white hover:text-zinc-300">Sign In</Link>
+                    
                 </div>
                 <button className="md:hidden text-white" onClick={toggleMenu}>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
