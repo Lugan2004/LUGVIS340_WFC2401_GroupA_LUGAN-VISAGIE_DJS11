@@ -13,8 +13,7 @@ Welcome to our Podcast Web App project! This application allows users to discove
 
 ## Demo
 
-Check out the live demo [here](https://lugvis-340-wfc-2401-group-a-lugan-visagie-djs-11.vercel.app/). Use the sign-in button to access the home page.
-### NOTE: There is no Authentication so there is no need for a account or any details, just click the sign in button and it will take you to the home page.
+Check out the live demo ➡️[HERE](the-podcast-playground.vercel.app).
 
 ## Getting Started
 
