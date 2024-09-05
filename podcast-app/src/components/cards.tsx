@@ -5,6 +5,7 @@ import ListenNowButton from './ListenNowBtn';
 import Fuse from 'fuse.js';
 import Image from 'next/image';
 
+// Define the structure of a Podcast object
 interface Podcast {
   id: string;
   title: string;
@@ -14,6 +15,7 @@ interface Podcast {
   image: string;
 }
 
+// Map of genre IDs to genre names
 const genreMap: { [key: number]: string } = {
   1: 'Personal Growth',
   2: 'Investigative Journalism',
@@ -26,10 +28,12 @@ const genreMap: { [key: number]: string } = {
   9: 'Kids and Family',
 };
 
+// Props for the PodcastCards component
 interface PodcastCardsProps {
   setIsLoading: (isLoading: boolean) => void;
 }
 
+// Styled components for layout and design
 const PodcastCardsContainer = styled.div`
   background: #141414;
   min-height: 100vh;
@@ -76,16 +80,20 @@ const PodcastInfo = styled.p`
   margin-bottom: 0.5rem;
 `;
 
+// Main PodcastCards component
 const PodcastCards: React.FC<PodcastCardsProps> = ({ setIsLoading }) => {
+  // State for all podcasts and filtered podcasts
   const [podcasts, setPodcasts] = useState<Podcast[]>([]);
   const [filteredPodcasts, setFilteredPodcasts] = useState<Podcast[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Effect to fetch podcasts when component mounts
   useEffect(() => {
     const fetchPodcasts = async () => {
       try {
         const response = await fetch('https://podcast-api.netlify.app');
         const data = await response.json();
+        // Map genre IDs to names and parse dates
         const podcastsWithGenreNames = data.map((podcast: Podcast) => ({
           ...podcast,
           genres: podcast.genres.map((genreId) => genreMap[genreId] || genreId),
@@ -109,6 +117,7 @@ const PodcastCards: React.FC<PodcastCardsProps> = ({ setIsLoading }) => {
     fetchPodcasts();
   }, [setIsLoading]);
 
+  // Effect to handle search functionality using Fuse.js
   useEffect(() => {
     const fuse = new Fuse(podcasts, {
       keys: ['title', 'genres'],
@@ -123,6 +132,7 @@ const PodcastCards: React.FC<PodcastCardsProps> = ({ setIsLoading }) => {
     }
   }, [searchTerm, podcasts]);
 
+  // Render the component
   return (
     <PodcastCardsContainer>
       <SortingBar
