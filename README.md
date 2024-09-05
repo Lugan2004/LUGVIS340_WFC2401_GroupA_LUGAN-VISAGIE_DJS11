@@ -13,7 +13,7 @@ Welcome to our Podcast Web App project! This application allows users to discove
 
 ## Demo
 
-Check out the live demo ➡️[HERE](the-podcast-playground.vercel.app).
+Check out the live demo ➡️[HERE](https://the-podcast-playground.vercel.app/).
 
 ## Getting Started
 
